@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Agrupaciones</h3>
+  <a href="{{ url_for('agrupaciones.crear') }}" class="btn btn-primary"> Nueva</a>
+</div>
+
+<ul class="list-group">
+  {% for a in agrupaciones %}
+  <li class="list-group-item">
+    <strong>{{ a.nombre }}</strong><br>
+    <small>{{ a.slug }}</small>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

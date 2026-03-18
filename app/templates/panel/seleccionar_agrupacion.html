@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="mb-4">Selecciona una Agrupación</h3>
+
+<div class="list-group">
+    {% for m in membresias %}
+    <a href="{{ url_for('panel.activar_agrupacion', agrupacion_id=m.agrupacion.id) }}"
+       class="list-group-item list-group-item-action">
+        {{ m.agrupacion.nombre }}
+    </a>
+   {% endfor %}
+</div>
+{% endblock %}

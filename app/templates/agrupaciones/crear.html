@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3 class="mb-4">Nueva Agrupación</h3>
+
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text" name="nombre" class="form-control" placeholder="Ej: Asociación Cultural" required autofocus>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email del Administrador</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">Crear</button>
+    </div>
+</form>
+{% endblock %}

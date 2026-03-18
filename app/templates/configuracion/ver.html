@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="mb-4">Configuración de la Agrupación</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label class="form-label">CIF</label>
+        <input type="text" name="cif" class="form-control" value="{{ config.cif }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Direccion</label>
+        <input type="text" name="direccion" class="form-control" value="{{ config.direccion }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">CP</label>
+        <input type="text" name="cp" class="form-control" value="{{ config.cp }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Población</label>
+        <input type="text" name="poblacion" class="form-control" value="{{ config.poblacion }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Provincia</label>
+        <input type="text" name="provincia" class="form-control" value="{{ config.provincia }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Teléfono</label>
+        <input type="text" name="telefono" class="form-control" value="{{ config.telefono }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" value="{{ config.email }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Web</label>
+        <input type="text" name="web" class="form-control" value="{{ config.web }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">IBAN</label>
+        <input type="text" name="iban" class="form-control" value="{{ config.iban }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Sufijo SEPA</label>
+        <input type="text" name="sufijo" class="form-control" value="{{ config.sufijo }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Logo</label>
+        <input type="file" name="logo" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Color Primario</label>
+        <input type="color" name="color_primario" class="form-control form-control-color" value="{{ config.color_primario }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Color Secundario</label>
+        <input type="color" name="color_secundario" class="form-control form-control-color" value="{{ config.color_secundario }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Color Fondo</label>
+        <input type="color" name="color_fondo" class="form-control form-control-color" value="{{ config.color_fondo }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Color Texto</label>
+        <input type="color" name="color_texto" class="form-control form-control-color" value="{{ config.color_texto }}">
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+{% endblock %}

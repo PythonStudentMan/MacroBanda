@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="mb-4">Panel de {{ agrupacion.nombre }}</h3>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm p-3" style="background-color: {{ agrupacion.config.color_primario }}">
+            <h5>Agrupaciones</h5>
+            <p>Secciones: {{ agrupacion.subagrupaciones|length }}</p>
+            <a href="{{ url_for('subagrupaciones.listar') }}" class="btn btn-primary btn-sm">Ver</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm p-3" style="background-color: {{ agrupacion.config.color_primario }}">
+            <h5>Usuarios</h5>
+            <p>Miembros: {{ agrupacion.membresias|length }}</p>
+            <a href="{{ url_for('usuarios.listar') }}" class="btn btn-primary btn-sm">Ver</a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm p-3" style="background-color: {{ agrupacion.config.color_primario }}">
+            <h5>Roles</h5>
+            <p>Roles creados: {{ agrupacion.roles|length }}</p>
+            <a href="{{ url_for('roles.listar') }}" class="btn btn-primary btn-sm">Ver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
