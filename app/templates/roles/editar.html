@@ -1,38 +1,40 @@
 {% extends 'base_tenant.html' %}
 {% block content %}
 
-<h3 class="mb-4">Nuevo Rol</h3>
+<h3 class="mb-4">Editar Rol</h3>
 
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <div class="mb-3">
-        <label class="form-label">Nombre del Rol</label>
-        <input type="text" name="nombre" class="form-control" required autofocus>
+        <label>Nombre del Rol</label>
+        <input type="text" name="nombre" value="{{ rol.nombre }}" clasS="form-control">
     </div>
 
-    <h5 class="mt-4">Permisos</h5>
+    <h5>Permisos</h5>
 
     <div class="row">
-
-        {% for permiso in permisos %}
+        {% for p in permisos %}
         <div class="col-md-4">
             <div class="form-check">
+
                 <input class="form-check-input"
                        type="checkbox"
                        name="permisos"
-                       value="{{ permiso.id }}">
+                       value="{{ p.id }}"
+                       {% if p in rol.permisos %}checked{% endif %}>
 
                 <label class="form-check-label">
-                    {{ permiso.codigo }}
+                    {{ p.codigo }}
                 </label>
+
             </div>
         </div>
         {% endfor %}
-
     </div>
 
     <button class="btn btn-primary mt-4">
-        Crear Rol
+        Guardar cambios
     </button>
 
 </form>

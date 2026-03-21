@@ -5,13 +5,74 @@
   <h3 class="mb-0">Agrupaciones</h3>
   <a href="{{ url_for('agrupaciones.crear') }}" class="btn btn-primary"> Nueva</a>
 </div>
+<form method="GET" class="mb-3">
+  <div class="input-group">
 
-<ul class="list-group">
-  {% for a in agrupaciones %}
-  <li class="list-group-item">
-    <strong>{{ a.nombre }}</strong><br>
-    <small>{{ a.slug }}</small>
-  </li>
-  {% endfor %}
-</ul>
+    <input type="text" name="search" class="form-control"
+           placeholder="Buscar agrupación..." value="{{ search }}">
+
+    <button class="btn btn-outline-secondary">
+      <i class="bi bi-search"></i>
+    </button>
+
+  </div>
+
+</form>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Slug</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in agrupaciones %}
+    <tr>
+      <td>{{ a.nombre }}</td>
+      <td>{{ a.slug }}</td>
+      <td class="text-end">
+        <a href="{{ url_for('agrupaciones.editar', agrupacion_id=agrupacion.id) }}" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-pencil"></i> Editar
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% if paginacion.has_prev %}
+    <li class="page-item">
+      <a class="page-link"
+         href="{{ url_for('agrupaciones.listar', page=pagination.prev_num, search=search) }}">
+          <<
+      </a>
+    </li>
+    {% endif %}
+
+    {% for p in pagination.iter_pages() %}
+      {% if p %}
+      <li class="page-item {% if p == pagination.page %}activate{% endif %}">
+        <a class="page-link"
+           href="{{ url_for('agrupaciones.listar', page=p, search=search) }}">
+            {{ p }}
+        </a>
+      </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+    <li class="page-item">
+      <a class="page-link"
+         href="{{ url_for('agrupaciones.listar', page=pagination.next_num, search=search) }}">
+          >>
+      </a>
+    </li>
+    {% endif %}
+
+  </ul>
+</nav>
 {% endblock %}

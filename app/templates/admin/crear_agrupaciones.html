@@ -1,0 +1,27 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+
+<h2 class="mb-4">Crear Agrupación</h2>
+
+<div class="card p-4" style="max-width: 500px;">
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Ej: Asociación Cultural" required autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email del Administrador</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary w-100">Crear</button>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

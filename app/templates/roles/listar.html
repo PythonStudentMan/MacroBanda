@@ -1,34 +1,81 @@
-{% extends 'base.html' %}
+{% extends 'base_tenant.html' %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h3 class="mb-0">Roles</h3>
-  <a href="{{ url_for('roles.crear') }}" class="btn btn-primary"> Nuevo Rol</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3>Roles</h3>
+  <a href="{{ url_for('roles.crear') }}" class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i> Nuevo Rol
+  </a>
 </div>
 
-<table class="table table-hover align-middle">
-  <thead class="table-light">
+<form method="GET" class="mb-3">
+  <div class="input-group">
+
+    <input type="text" name="search" class="form-control"
+           placeholder="Buscar rol..." value="{{ search }}">
+
+    <button class="btn btn-outline-secondary">
+      <i class="bi bi-search"></i>
+    </button>
+
+  </div>
+
+</form>
+
+<table class="table table-hover">
+  <thead>
     <tr>
       <th>Nombre</th>
       <th>Permisos</th>
-      <th class="text-end">Acciones</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     {% for r in roles %}
     <tr>
       <td>{{ r.nombre }}</td>
-      <td>
-        {% for p in r.permisos %}
-          <span class="badge bg-secondary">{{ p.nombre }}</span>
-        {% endfor %}
-      </td>
+      <td>{{ r.permisos|length }}</td>
       <td class="text-end">
-        <a href="{{ url_for('usuarios.editar', rol_id=r.id) }}" class="btn btn-sm btn-warning">Editar</a>
-        <a href="{{ url_for('usuarios.eliminar', rol_id=r.id) }}" class="btn btn-sm btn-danger">Eliminar</a>
+        <a href="{{ url_for('roles.editar', rol_id=rol.id) }}" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-pencil"></i> Editar
+        </a>
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<nav>
+  <ul class="pagination">
+    {% if paginacion.has_prev %}
+    <li class="page-item">
+      <a class="page-link"
+         href="{{ url_for('roles.listar', page=pagination.prev_num, search=search) }}">
+          <<
+      </a>
+    </li>
+    {% endif %}
+
+    {% for p in pagination.iter_pages() %}
+      {% if p %}
+      <li class="page-item {% if p == pagination.page %}activate{% endif %}">
+        <a class="page-link"
+           href="{{ url_for('roles.listar', page=p, search=search) }}">
+            {{ p }}
+        </a>
+      </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+    <li class="page-item">
+      <a class="page-link"
+         href="{{ url_for('roles.listar', page=pagination.next_num, search=search) }}">
+          >>
+      </a>
+    </li>
+    {% endif %}
+
+  </ul>
+</nav>
 {% endblock %}

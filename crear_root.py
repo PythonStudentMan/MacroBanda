@@ -5,23 +5,23 @@ from app.models import Usuario
 app = create_app()
 
 with app.app_context():
-    usuario = Usuario.query.filter_by(
-        email='root@root.com'
-    ).first()
 
-    if not usuario:
-        root = Usuario(
-            email='root@root.com',
+    email = 'root@root.com'
+    password = 'root123'
+
+    usuario = Usuario.query.filter_by(email=email).first()
+
+    if usuario:
+        print('El usuario root ya existe')
+    else:
+        usuario = Usuario(
+            email=email,
+            nombre='root',
             es_root=True
         )
+        usuario.set_password(password)
 
-        root.set_password('root123')
-
-        db.session.add(root)
+        db.session.add(usuario)
         db.session.commit()
 
-        print('Usuario root creado')
-
-    else:
-
-        print('El usuario root ya existe')
+        print('Usuario root creado correctamente')

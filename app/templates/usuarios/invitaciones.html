@@ -1,0 +1,41 @@
+{% extends 'base_tenant.html' %}
+
+{% block content %}
+<h3 class="mb-4">Invitaciones</h3>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Estado</th>
+      <th>Expira</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in invitaciones %}
+    <tr>
+      <td>{{ i.email }}</td>
+      <td>
+        {% if i.aceptada %}
+          <span class="badge bg-success">Aceptada</span>
+        {% elif i.expira_en < now() %}
+          <span class="badge bg-danger">Expirada</span>
+        {% else %}
+          <span class="badge bg-warning">Pendiente</span>
+        {% endif %}
+      </td>
+      <td>{{ i.expira_en.strftime('%d/%m/%Y') }}</td>
+      <td class="text-end">
+        {% if not i.aceptada %}
+          <a href="{{ url_for('usuarios.reenviar_invitacion', id=i.id) }}"
+             class="btn btn-sm btn-outline-primary">
+            Reenviar
+          </a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

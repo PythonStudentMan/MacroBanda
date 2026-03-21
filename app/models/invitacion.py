@@ -1,6 +1,11 @@
 from app.extensions import db
 from .base import BaseModel
 import uuid
+from datetime import datetime, timezone, timedelta
+
+def generar_expiracion(self):
+    return datetime.now(timezone.utc) + timedelta(days=2)
+
 
 class Invitacion(BaseModel):
 
@@ -15,5 +20,4 @@ class Invitacion(BaseModel):
 
     rol = db.Column(db.String(50), default='miembro')
     aceptada = db.Column(db.Boolean, default=False)
-
-
+    expira_en = db.Column(db.DateTime, default=generar_expiracion)

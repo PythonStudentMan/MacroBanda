@@ -7,9 +7,13 @@ class Agrupacion(BaseModel):
 
     nombre = db.Column(db.String(255), nullable=False)
     slug = db.Column(db.String(255), nullable=False)
-    __table_args__ = (db.UniqueConstraint('slug', name='uix_agrupacion_slug'),)
-    cif = db.Column(db.String(20))
+    subdominio = db.Column(db.String(100))
+    __table_args__ = (
+        db.UniqueConstraint('slug', name='uix_agrupacion_slug'),
+        db.UniqueConstraint('subdominio', name='uix_agrupacion_subdominio'),
+    )
 
+    cif = db.Column(db.String(20))
     direccion = db.Column(db.String(200))
     cp = db.Column(db.String(10))
     poblacion = db.Column(db.String(40))
@@ -22,3 +26,4 @@ class Agrupacion(BaseModel):
     subagrupaciones = db.relationship('Subagrupacion', back_populates='agrupacion')
     membresias = db.relationship('Membresia', back_populates='agrupacion')
     roles = db.relationship('Rol', back_populates='agrupacion')
+    auditorias = db.relationship('Auditoria', back_populates='agrupacion')

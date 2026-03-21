@@ -1,14 +1,45 @@
-{% extends 'base.html' %}
+{% extends 'base_auth.html' %}
 
 {% block content %}
-<h3 class="mb-4">Selecciona una Agrupación</h3>
+<h4 class="text-center mb-4">Selecciona una Agrupación</h4>
 
-<div class="list-group">
+<div class="row g-3">
     {% for m in membresias %}
-    <a href="{{ url_for('panel.activar_agrupacion', agrupacion_id=m.agrupacion.id) }}"
-       class="list-group-item list-group-item-action">
-        {{ m.agrupacion.nombre }}
-    </a>
+    <div class="col-12">
+        <a href="{{ url_for('panel.activar_agrupacion', agrupacion_id=m.agrupacion.id) }}"
+           class="text-decoratin-none">
+
+            <div class="card shadow-sm p-3 hover-shadow">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h5 class="mb-1">{{ m.agrupacion.nombre }}</h5>
+                        <small class="text-muted">
+                            Rol: {{ m.rol.nombre if m.rol else 'Sin rol asignado' }}
+                        </small>
+                    </div>
+
+                    <div>
+                        <span class="btn btn-primary btn-sm">
+                            Entrar ->
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+        </a>
+    </div>
    {% endfor %}
+
 </div>
+<style>
+    .hover-shadow:hover {
+        transform: translateY(-2px);
+        transition: 0.2s;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    }
+</style>
+
 {% endblock %}

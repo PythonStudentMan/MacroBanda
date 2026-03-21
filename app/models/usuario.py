@@ -11,12 +11,14 @@ class Usuario(UserMixin, BaseModel):
     email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
 
+    nombre = db.Column(db.String(120), nullable=True)
+
     es_root = db.Column(db.Boolean, default=False)
-    activo = db.Column(db.Boolean, default=True)
 
     __table_args__ = (db.UniqueConstraint ('email', name='uix_email_usuario'),)
 
     membresias = db.relationship('Membresia', back_populates='usuario')
+    auditorias = db.relationship('Auditoria', back_populates='usuario')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

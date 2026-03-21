@@ -1,36 +1,45 @@
 from app import create_app
 from app.extensions import db
-from app.models.usuario import Usuario
-from app.models.auth import Rol, Permiso
+from app.models import Rol, Permiso, roles_permisos
 
 app = create_app()
 
+# Definición de permisos por módulos
+
+PERMISOS = [
+    ('Ver Dashboard', 'dashboard.ver'),
+
+    ('Ver Agrupaciones', 'agrupaciones.ver'),
+    ('Crear Agrupaciones', 'agrupaciones.crear'),
+    ('Editar Agrupaciones', 'agrupaciones.editar'),
+
+    ('Ver Usuarios', 'usuarios.ver'),
+    ('Crear Usuarios', 'usuarios.crear'),
+    ('Editar Usuarios', 'usuarios.editar'),
+
+    ('Ver Roles', 'roles.ver'),
+    ('Editar Roles', 'roles.editar'),
+
+    ('Ver Configuración', 'configuracion.ver'),
+    ('Editar Configuración', 'configuracion.editar'),
+]
+
 with app.app_context():
-    roles = ['superadmin', 'admin', 'basico']
-    for r in roles:
-        if not Rol.query.filter_by(nombre=r).first():
-            db.session.add(Rol(nombre=r))
+    print('Creando permisos...')
 
-    perms = [
-        ('Gestionar Agrupación', 'agrupacion.config', 'Configurar Agrupación'),
-        ('Gestionar Usuarios', 'usuario.config', 'Gestión de Usuarios'),
-        ('Dashboard', 'dashboard.ver', 'Ver el Dashboard General'),
-        ('Editar Ajustes', 'ajustes.config', 'Editar Ajustes Generales'),
-    ]
+    permisos_obj = {}
 
-    for nombre, codigo, descripcion in perms:
-        if not Permiso.query.filter_by(codigo=codigo).first():
-            db.session.add(Permiso(nombre=nombre, codigo=codigo, descripcion=descripcion))
+    for nombre, codigo in PERMISOS:
+
+        permiso = Permiso.query.filter_by(codigo=codigo).first()
+
+        if not permiso:
+            permiso = Permiso(nombre=nombre, codigo=codigo)
+            db.session.add(permiso)
+
+        permisos_obj[codigo] = permiso
 
     db.session.commit()
 
-    # Crear usuario root si no existe
 
-    if not Usuario.query.filter_by(email='root@test.com').first():
-        u = Usuario(email="root@test.com", is_root=True)
-        u.set_password('rootpass')
-        db.session.add(u)
-        db.session.commit()
-        print('Usuario root creado: root@test.com / rootpass')
-    else:
-        print('Usuario root ya existe.')
+    print('Seed completaado correctamente')

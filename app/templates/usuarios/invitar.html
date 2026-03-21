@@ -1,0 +1,23 @@
+{% extends 'base_tenant.html' %}
+
+{% block content %}
+<h3 class="mb-4">Invitar usuario</h3>
+
+<div class="card p-4" style="max-width: 500px;">
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required autofocus>
+        </div>
+
+        <button class="btn btn-primary w-100">
+            Enviar invitación
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}

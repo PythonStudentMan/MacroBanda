@@ -1,0 +1,34 @@
+{% extends 'auth/base_auth.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-sm border-0">
+
+            <h4 class="mb-3">Crear Cuenta</h4>
+
+            <p class="text-muted">
+                Estás aceptando una invitación para:
+                <strong>{{ email }}</strong>
+            </p>
+
+            <form method="POST">
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="mb-3">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" class="form-control" required autofocus>
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Crear cuenta y acceder
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

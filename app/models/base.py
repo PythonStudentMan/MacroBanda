@@ -16,3 +16,8 @@ class BaseModel(db.Model):
         onupdate=datetime.now(timezone.utc), nullable=False
     )
     update_by = db.Column(db.Integer, nullable=True)
+
+    activo = db.Column(db.Boolean, default=True)
+
+    def soft_delete(self):
+        self.activo = False

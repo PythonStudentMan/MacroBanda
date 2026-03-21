@@ -1,18 +1,21 @@
 from functools import wraps
-from flask import abort, session
+from flask import abort, session, flash, redirect, url_for
 from flask_login import current_user
 from app.services.permisos import tiene_permiso, obtener_membresia_actual
 
-
 def tenant_required(f):
     @wraps(f)
-    def decorated_function(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         if current_user.es_root:
             abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
+        if not session.get('agrupacion_activa'):
+            flash('Selecciona una agrupación', 'warning')
+            return redirect(url_for('panel.panel_inicio'))
 
-def permiso_requerido(codigo_permiso):
+        return f(*args, **kwargs)
+    return wrapper
+
+def requiere_permiso(codigo_permiso):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):

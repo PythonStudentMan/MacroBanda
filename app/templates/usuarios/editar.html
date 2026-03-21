@@ -1,0 +1,51 @@
+{% extends 'base_tenant.html' %}
+
+{% block content %}
+
+<h3 class="mb-4">Editar usuario</h3>
+
+<div class="card p-4">
+    <p><strong>{{ membresia.usuario.email }}</strong></p>
+
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+            <label>Rol</label>
+            <select name="rol_id" class="form-control">
+                {% for rol in roles %}
+                <option value="{{ rol.id }}"
+                        {% if membresia.rol_id == rol.id %}selected{% endif %}>
+                    {{ rol.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <h5 class="mt-4">Permisos adicionales</h5>
+
+        <div class="row">
+            {% for p in permisos %}
+            <div class="col-md-4">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="permisos"
+                           value="{{ p.id }}"
+                           {% if p in membresia.permisos %}checked{% endif %}>
+
+                    <label class="form-check-label">
+                        {{ p.codigo }}
+                    </label>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <button class="btn btn-primary">
+            Guardar
+        </button>
+    </form>
+</div>
+{% endblock %}

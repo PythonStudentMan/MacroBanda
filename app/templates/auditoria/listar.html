@@ -1,0 +1,27 @@
+{% extends 'base_tenant.html' %}
+
+{% block content %}
+
+<h3 class="mb-4">Auditoría</h3>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Usuario</th>
+      <th>Acción</th>
+      <th>Detalle</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.created_at.strftime('%d/%m/%Y :%H:%M') }}</td>
+      <td>{{ log.usuario.email if log.usuario else 'Sistema'</td>
+      <td>{{ log.accion }}</td>
+      <td>{{ log.descripcion }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}

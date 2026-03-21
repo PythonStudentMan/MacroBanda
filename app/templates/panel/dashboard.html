@@ -1,31 +1,153 @@
-{% extends 'base.html' %}
+{% extends 'base_tenant.html' %}
 
 {% block content %}
-<h3 class="mb-4">Panel de {{ agrupacion.nombre }}</h3>
+<h3 class="mb-2">Bienvenido a {{ agrupacion.nombre }}</h3>
 
-<div class="row g-3">
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm p-3" style="background-color: {{ agrupacion.config.color_primario }}">
-            <h5>Agrupaciones</h5>
-            <p>Secciones: {{ agrupacion.subagrupaciones|length }}</p>
-            <a href="{{ url_for('subagrupaciones.listar') }}" class="btn btn-primary btn-sm">Ver</a>
+<div class="row g-4">
+
+    <!-- INFO AGRUPACIÓN -->
+    <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+            <h5 class="mb-3">Información</h5>
+
+            <p><strong>Nombre:</strong> {{ agrupacion.nombre }}</p>
+            <p><strong>Email:</strong> {{ agrupacion.email or 'No definido' }}</p>
+            <p><strong>Teléfono:</strong> {{ agrupacion.telefono or 'No definido' }}</p>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm p-3" style="background-color: {{ agrupacion.config.color_primario }}">
-            <h5>Usuarios</h5>
-            <p>Miembros: {{ agrupacion.membresias|length }}</p>
-            <a href="{{ url_for('usuarios.listar') }}" class="btn btn-primary btn-sm">Ver</a>
+    <!-- TU ROL -->
+    <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+            <h5 class="mb-3">Tu acceso</h5>
+
+            {% set membresia = current_user.membresias | selectattr('agrupacion_id', 'equalto'. 'agrupacion.id') | list | first %}
+
+            <p>
+                <strong>Rol:</strong>
+                {{ membresia.rol.nombre if membresia and membresia.rol else 'Sin rol definido' }}
+            </p>
+
+            <p class="text-muted">
+                Este rol define lo que puedes hacer dentro de la plataforma.
+            </p>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card text-center shadow-sm p-3" style="background-color: {{ agrupacion.config.color_primario }}">
-            <h5>Roles</h5>
-            <p>Roles creados: {{ agrupacion.roles|length }}</p>
-            <a href="{{ url_for('roles.listar') }}" class="btn btn-primary btn-sm">Ver</a>
+</div>
+<hr class="my-4">
+<!-- CANVAS -->
+<div class="card border-0 shadow-sm p-4 mt-4">
+    <h5 class="mb-3">
+        <i class="bi bi-bar-chart"></i> Crecimiento de usuarios
+    </h5>
+    <canvas id="usuariosChart"></canvas>
+
+</div>
+
+<!-- MÉTRICAS -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-3">
+            <h6 class="text-muted">Usuarios</h6>
+            <h2>{{ total_usuarios }}</h2>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-3">
+            <h6 class="text-muted">Roles</h6>
+            <h2>{{ total_roles }}</h2>
         </div>
     </div>
 </div>
+
+<!-- ACTIVIDAD RECIENTE -->
+<div class="card border-0 shadow-sm p-4">
+    <h5 class="mb-3">
+        <i class="bi bi-clock-history"></i> Actividad reciente
+    </h5>
+
+    <ul class="list-group list-group-flush">
+        {% for log in actividad %}
+        <li class="list-group-item d-flex justify-content-between">
+            <div>
+                <strong>{{ log.action }}</strong><br>
+                <small class="text-muted">
+                    {{ log.descripcion }}
+                </small>
+            </div>
+            <small class="text-muted">
+                {{ log.created_at.strftime('%d/%m/%Y %H:%M') }}
+            </small>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- ACCESOS RÁPIDOS -->
+<div class="row mt-4">
+
+    {% if tiene_permsiso('usuarios.ver') %}
+    <div class="col-md-4">
+        <a href="{{ url_for('usuarios.listar') }}" class="text-decoration-none p-3 shadow-sm border-0">
+            <i class="bi bi-people fs-4"></i>
+            <p class="mt-2 mb-0">Gestionar Usuarios</p>
+        </a>
+    </div>
+    {% endif %}
+
+    {% if tiene_permiso('roles.ver') %}
+    <div class="col-md-4">
+        <a href="{{ url_for('roles.listar') }}" class="text-decoration-none p-3 shadow-sm border-0">
+            <i class="bi bi-shield-lock fs-4"></i>
+            <p class="mt-2 mb-0">Gestionar roles</p>
+        </a>
+    </div>
+    {% endif %}
+
+    {% if tiene_permiso('configuracion.ver') %}
+    <div class="col-md-4">
+        <a href="{{ url_for('configuracion.ver') }}" class="text-decoration-none p-3 shadow-sm border-0">
+            <i class="bi bi-gear fs-4"></i>
+            <p class="mt-2 mb-0">Configuración</p>
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+.hover-shadow:hover {
+    transform: translateY(-2px);
+    transition: 0.2s;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+}
+</style>
+<script>
+    const ctx = document.getElementById('usuariosChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [{
+                label: 'Usuarios',
+                data: {{ valores | tojson }},
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

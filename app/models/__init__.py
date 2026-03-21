@@ -10,3 +10,4 @@ from .permiso import Permiso
 from .rol import Rol
 from .membresia_permiso import membresias_permisos
 from .rol_permiso import roles_permisos
+from .auditoria import Auditoria

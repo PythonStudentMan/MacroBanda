@@ -1,0 +1,25 @@
+{% extends 'base_tenant.html' %}
+
+{% block content %}
+<h3 class="mb-4">Invitación creada</h3>
+
+<div class="card p-4">
+    <p>
+        Se ha generado una invitación para:
+        <strong>{{ email }}</strong>
+    </p>
+
+    <label class="form-label mt-3">Linkg de invitación</label>
+    <input type="text" class="form-control" value="{{ link }}" readonly onclick="this.select();">
+
+    <small class="text-muted">
+        Copia este enlace y envíaselo al usuario.
+    </small>
+
+    <div class="mt-4">
+        <a href="{{ url_for('usuarios.listar') }}" class="btn btn-primary">
+            Volver a usuarios
+        </a>
+    </div>
+</div>
+{% endblock %}

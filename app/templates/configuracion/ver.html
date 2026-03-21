@@ -5,83 +5,146 @@
 
 <form method="POST" enctype="multipart/form-data">
 
-    <div class="mb-3">
-        <label class="form-label">CIF</label>
-        <input type="text" name="cif" class="form-control" value="{{ config.cif }}">
-    </div>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-    <div class="mb-3">
-        <label class="form-label">Direccion</label>
-        <input type="text" name="direccion" class="form-control" value="{{ config.direccion }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">CP</label>
-        <input type="text" name="cp" class="form-control" value="{{ config.cp }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Población</label>
-        <input type="text" name="poblacion" class="form-control" value="{{ config.poblacion }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Provincia</label>
-        <input type="text" name="provincia" class="form-control" value="{{ config.provincia }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Teléfono</label>
-        <input type="text" name="telefono" class="form-control" value="{{ config.telefono }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" value="{{ config.email }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Web</label>
-        <input type="text" name="web" class="form-control" value="{{ config.web }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">IBAN</label>
-        <input type="text" name="iban" class="form-control" value="{{ config.iban }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Sufijo SEPA</label>
-        <input type="text" name="sufijo" class="form-control" value="{{ config.sufijo }}">
-    </div>
+    <img id="logoPreview" class="img-fluid mb-3" style="max-height: 60px;">
 
     <div class="mb-3">
         <label class="form-label">Logo</label>
         <input type="file" name="logo" class="form-control">
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Color Primario</label>
-        <input type="color" name="color_primario" class="form-control form-control-color" value="{{ config.color_primario }}">
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+            <label>Color Primario</label>
+            <input type="color" id="color_primario" name="color_primario" class="form-control form-control-color"
+                   value="{{ config.color_primario or '#343a40' }}">
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label>Color Secundario</label>
+            <input type="color" id="color_secundario" name="color_secundario" class="form-control form-control-color"
+                   value="{{ config.color_secundario or '#0d6efd'}}">
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label>Color Fondo</label>
+            <input type="color" id="color_fondo" name="color_fondo" class="form-control form-control-color"
+                   value="{{ config.color_fondo or '#f8f9fa'}}">
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label>Color Texto</label>
+            <input type="color" id="color_texto" name="color_texto" class="form-control form-control-color"
+                   value="{{ config.color_texto or '#212529'}}">
+        </div>
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Color Secundario</label>
-        <input type="color" name="color_secundario" class="form-control form-control-color" value="{{ config.color_secundario }}">
+    <hr>
+
+    <div class="col-12">
+        <label class="form-label">Direccion</label>
+        <input type="text" name="direccion" class="form-control" value="{{ config.direccion }}">
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Color Fondo</label>
-        <input type="color" name="color_fondo" class="form-control form-control-color" value="{{ config.color_fondo }}">
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">CP</label>
+            <input type="text" name="cp" class="form-control" value="{{ config.cp }}">
+        </div>
+
+        <div class="col-md-5">
+            <label class="form-label">Población</label>
+            <input type="text" name="poblacion" class="form-control" value="{{ config.poblacion }}">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Provincia</label>
+            <input type="text" name="provincia" class="form-control" value="{{ config.provincia }}">
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Color Texto</label>
-        <input type="color" name="color_texto" class="form-control form-control-color" value="{{ config.color_texto }}">
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label">Teléfono</label>
+            <input type="text" name="telefono" class="form-control" value="{{ config.telefono }}">
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ config.email }}">
+        </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label class="form-label">CIF</label>
+            <input type="text" name="cif" class="form-control" value="{{ config.cif }}">
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Web</label>
+            <input type="text" name="web" class="form-control" value="{{ config.web }}">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <label class="form-label">IBAN</label>
+            <input type="text" name="iban" class="form-control" value="{{ config.iban }}">
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Sufijo SEPA</label>
+            <input type="text" name="sufijo" class="form-control" value="{{ config.sufijo }}">
+        </div>
+    </div>
+
 
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary">Guardar</button>
     </div>
+
 </form>
+<script>
+function updatePreview() {
+    document.documentElement.style.setProperty(
+        '--color-primario',
+        document.getElementById('color_primario').value
+    );
+
+    document.documentElement.style.setProperty(
+        '--color-secundario',
+        document.getElementById('color_secundario').value
+    );
+
+    document.documentElement.style.setProperty(
+        '--color-fondo',
+        document.getElementById('color_fondo').value
+    );
+
+    document.documentElement.style.setProperty(
+        '--color-texto',
+        document.getElementById('color_texto').value
+    );
+}
+
+// Listeners
+document.querySelectorAll('input[type="color"]').forEach(input => {
+    input.addEventListener('input', updatePreview);
+});
+
+document.querySelectorAll('input[name="logo"]').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('logoPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 {% endblock %}
