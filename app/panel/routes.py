@@ -6,59 +6,42 @@ from app.models import Agrupacion, Membresia, Auditoria, Rol
 from app.utils.decorators import tenant_required, requiere_permiso
 
 
-panel_bp = Blueprint('panel', __name__, url_prefix='/panel', subdomain='<subdominio>')
-
-@panel_bp.before_request
-def cargar_agrupacion(subdominio):
-
-    agrupacion = Agrupacion.query.filter_by(
-        subdominio=subdominio
-    ).first()
-
-    if not agrupacion:
-        abort(404)
-
-    g.agrupacion = agrupacion
+panel_bp = Blueprint('panel', __name__, url_prefix='/panel')
 
 @login_required
 @panel_bp.route('/')
 def panel_inicio():
-
     # Caso ROOT
     if current_user.es_root:
         return redirect(url_for('admin.dashboard'))
 
-    if g.agrupacion:
+    if g.get('agrupacion'):
         session['agrupacion_activa'] = g.agrupacion.id
         return redirect(url_for('panel.dashboard'))
 
     # Buscamos membresías del usuario
-    membresias = Membresia.query.filter_by(usuario_id=current_user.id).all()
+    membresias = Membresia.query.filter_by(usuario_id=current_user.id, activo=True).all()
 
     if not membresias:
-        flash('No perteneces a ninguna agrupación. Solicita una invitación.', 'warning')
+        flash('No perteneces a ninguna agrupación.', 'warning')
         return redirect(url_for('auth.login'))
-
-    # Recordar última agrupación
-    ultima = g.agrupacin.id
-
-    if ultima:
-        return redirect(url_for('panel.dashboard'))
 
     # Si solo tiene una agrupación, activarla automáticamente
     if len(membresias) == 1:
         session['agrupacion_activa'] = membresias[0].agrupacion_id
         return redirect(url_for('panel.dashboard'))
 
-    # Si tiene varias, seleccionar con qué agrupación quiere trabajar en esta sesión
     return render_template('panel/seleccionar_agrupacion.html', membresias=membresias)
 
 @login_required
-@tenant_required
 @panel_bp.route('/seleccionar/<int:agrupacion_id>/')
 def activar_agrupacion(agrupacion_id):
     # Validar que el usuario pertenece a esa agrupación
-    membresia = Membresia.query.filter_by(usuario_id=current_user.id, agrupacion_id=agrupacion_id).first()
+    membresia = Membresia.query.filter_by(
+        usuario_id=current_user.id,
+        agrupacion_id=agrupacion_id,
+        activo=True
+    ).first()
 
     if not membresia:
         flash('No tienes acceso a esta agrupación', 'danger')
@@ -73,13 +56,8 @@ def activar_agrupacion(agrupacion_id):
 @login_required
 @tenant_required
 def dashboard():
-
-    if g.agrupacion:
-        agrupacion_id = g.agrupacion.id
-    else:
-        agrupacion_id = session.get('agrupacion_activa')
-
-    agrupacion = Agrupacion.query.get(agrupacion_id)
+    agrupacion_id = g.agrupacion.id if g.get('agrupacion') else session.get('agrupacion_activa')
+    agrupacion = Agrupacion.query.get_or_404(agrupacion_id)
 
     # Métricas
     total_usuarios = Membresia.query.filter_by(
@@ -125,12 +103,10 @@ def dashboard():
 @tenant_required
 @requiere_permiso('auditoria.ver')
 def auditoria():
-    agrupacion_id = session.get('agrupacion_activa')
-
     logs = Auditoria.query.filter_by(
-        agrupacion_id=agrupacion_id
+        agrupacion_id=g.agrupacion_id
     ).order_by(Auditoria.created_at.desc()).limit(50).all()
 
     return render_template(
-        'auditoria/listar.html', logs=logs
+        'panel/auditoria.html', logs=logs
     )
