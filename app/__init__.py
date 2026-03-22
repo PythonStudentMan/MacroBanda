@@ -20,28 +20,15 @@ def create_app():
 
     # Detector de Tenant
     @app.before_request
-    def cargar_tenant():
-        host = request.host
-        partes = host.split('.')
-        if len(partes) >= 3:
-            subdominio = partes[0]
-        else:
-            subdominio = None
-        if subdominio:
-            from app.models import Agrupacion
-            agrupacion = Agrupacion.query.filter_by(
-                subdominio=subdominio
-            ).first()
-            g.agrupacion = agrupacion
-        else:
-            g.agrupacion = None
+    def before_request():
+        cargar_tenant()
 
     # RUTA RAIZ
     @app.route('/')
     def home():
         if g.get('agrupacion'):
             return f"Tenant activo: {g.agrupacion.nombre}"
-        return "Landing pública"
+        return "Landing pública - MacroBandas"
 
     # Blueprints
     from .admin.routes import admin_bp
@@ -63,12 +50,11 @@ def create_app():
     app.context_processor(inject_agrupacion)
     app.context_processor(inject_membresias)
 
-
     from app.models import Usuario
     @login_manager.user_loader
     def cargar_usuario(usuario_id):
         return Usuario.query.get(int(usuario_id))
 
-    app.jinja_env.globals['tiene_pemiso'] = tiene_permiso
+    app.jinja_env.globals['tiene_permiso'] = tiene_permiso
 
     return app

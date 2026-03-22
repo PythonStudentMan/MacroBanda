@@ -1,10 +1,11 @@
 import os
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv()
 
 class Config:
-    SECRET_KEY = "dev-secret"
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///dev.db'
+    SECRET_KEY = os.getenv('SECRET_KEY', 'cambia-esta-clave-por-una-larga-y-segura')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///dev.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SERVER_NAME = 'local.test'  # en desarrollo
@@ -13,8 +14,6 @@ class Config:
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-
-    MAIL_USERNAME = 'amvf.losgarres@gmail.com'
-    MAIL_PASSWORD = 'ghp_jbJfla8n4Sd2xDv8mmWqfvG7KGJrz51tLL9k'
-
-    MAIL_DEFAULT_SENDER = 'amvf.losgarres@gmail.com'
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.getenv('MAIL_USERNAME')
