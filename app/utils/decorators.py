@@ -1,51 +1,30 @@
 from functools import wraps
-from flask import abort, session, flash, redirect, url_for
+from flask import g, abort, flash, redirect, url_for
 from flask_login import current_user
-from app.services.permisos import tiene_permiso, obtener_membresia_actual
+
+from app.services.permisos import tiene_permiso
+
 
 def tenant_required(f):
     @wraps(f)
-    def wrapper(*args, **kwargs):
-        if current_user.es_root:
-            abort(403)
-        if not session.get('agrupacion_activa'):
-            flash('Selecciona una agrupación', 'warning')
+    def decorated_function(*args, **kwargs):
+        if not g.get('agrupacion'):
+            flash('Debes seleccionar una agrupación primero', 'warning')
             return redirect(url_for('panel.panel_inicio'))
-
         return f(*args, **kwargs)
-    return wrapper
+    return decorated_function
 
-def requiere_permiso(codigo_permiso):
+def requiere_permiso(permiso):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            agrupacion_id = session.get('agrupacion_activa')
-            if not agrupacion_id or not tiene_permiso(codigo_permiso):
+            if current_user.es_root:
+                return f(*args, **kwargs)
+            if not g.get('agrupacion'):
+                abort(403)
+            if not tiene_permiso(permiso):
+                flash('No tienes permiso para esta acción', 'danger')
                 abort(403)
             return f(*args, **kwargs)
         return decorated_function
     return decorator
-
-def admin_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        membresia = obtener_membresia_actual()
-
-        if not membresia or membresia.rol != 'admin':
-            abort(403)
-
-        return f(*args, **kwargs)
-    return wrapper()
-
-
-def superadmin_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        membresia = obtener_membresia_actual()
-
-        if not membresia or membresia.rol != 'superadmin':
-            abort(403)
-
-        return f(*args, **kwargs)
-
-    return wrapper()
