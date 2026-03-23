@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from flask_login import login_required
-from app.models import ConfiguracionAgrupacion, Agrupacion
+from app.models import ConfiguracionAgrupacion, FormaPago
 from app.extensions import db
 from app.utils.decorators import tenant_required, requiere_permiso
 import os
@@ -53,6 +53,11 @@ def ver():
         config.agrupacion.email = request.form.get('email')
         config.agrupacion.web = request.form.get('web')
 
+        config.forma_pago_id = request.form.get('forma_pago_id')
+        if config.forma_pago_id == '':
+            config.forma_pago_id = None
+        config.remesas_sepa = 'remesas_sepa' in request.form
+
         config.iban = request.form.get('iban')
         config.sufijo = request.form.get('sufijo')
 
@@ -61,4 +66,9 @@ def ver():
         flash('Configuración actualizada', 'success')
         return redirect(url_for('configuracion.ver'))
 
-    return render_template('configuracion/ver.html', config=config)
+    formas_pago_disponibles = FormaPago.query.filter_by(
+        agrupacion_id=agrupacion_id,
+        activo=True
+    ).order_by(FormaPago.nombre).all()
+
+    return render_template('configuracion/ver.html', config=config, formas_pago_disponibles=formas_pago_disponibles)

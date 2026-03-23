@@ -91,6 +91,28 @@
     </div>
 
     <div class="row">
+        <div class="mb-3">
+            <label class="form-label">Forma de pago por defecto</label>
+            <select name="forma_pago_id" class="form-select">
+                <option value="">Ninguna (usar por defecto del sistema)</option>
+                {% for forma in formas_pago_disponibles %}
+                <option value="{{ forma.id }}"
+                        {% if config.forma_pago_id == forma.id %}selected{% endif %}>
+                    {{ forma.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" name="remesas_sepa" id="remesas_sepa"
+                   class="form-check-input"
+                   {% if config.remesas_sepa %}checked{% endif %}>
+            <label class="form-check-label" for="remesas_sepa">
+                La agrupación realiza cobros mediante remesas SEPA (domicilación bancaria)
+            </label>
+        </div>
+
         <div class="col-md-8">
             <label class="form-label">IBAN</label>
             <input type="text" name="iban" class="form-control" value="{{ config.iban }}">
