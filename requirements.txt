@@ -29,7 +29,6 @@ Flask-Migrate==4.1.0
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.2
 greenlet==3.3.2
-gunicorn==25.1.0
 html5lib==1.1
 identify==2.6.17
 idna==3.4
@@ -67,7 +66,6 @@ pycparser==2.21
 Pygments==2.19.2
 pyproject_hooks==1.0.0
 pyrsistent==0.19.3
-pytest==9.0.2
 python-dotenv==1.2.2
 pytokens==0.4.1
 PyYAML==6.0.3
@@ -87,3 +85,6 @@ webencodings==0.5.1
 Werkzeug==3.1.6
 WTForms==3.2.1
 zipp==3.15.0
+gunicorn==23.0.0
+psycopg2-ginary==2.9.10
+pytest==8.3.4
