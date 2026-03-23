@@ -104,7 +104,7 @@ def dashboard():
 @requiere_permiso('auditoria.ver')
 def auditoria():
     logs = Auditoria.query.filter_by(
-        agrupacion_id=g.agrupacion_id
+        agrupacion_id=g.agrupacion.id
     ).order_by(Auditoria.created_at.desc()).limit(50).all()
 
     return render_template(

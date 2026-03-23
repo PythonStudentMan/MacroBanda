@@ -11,3 +11,6 @@ from .rol import Rol
 from .membresia_permiso import membresias_permisos
 from .rol_permiso import roles_permisos
 from .auditoria import Auditoria
+from .tipos_socio import TipoSocio
+from .forma_pago import FormaPago
+from .tipos_socio_formas_pago import tipos_socio_formas_pago
