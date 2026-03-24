@@ -1,76 +1,95 @@
 {% extends 'base_tenant.html' %}
-
-{% block title %}Socio{% endblock %}
-
 {% block content %}
-<h1 class="mb-4">{{ 'Editar' if socio else 'Nuevo' }} Socio</h1>
+
+<h3 class="mb-4">
+    {% if socio %}Editar Socio{% else %}Nuevo Socio{% endif %}
+</h3>
 
 <form method="POST">
-    {{ form.hidden_tag() }}
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form.nombre.label(class="form-label") }}
-            {{ form.nombre(class="form-control") }}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form.apellidos.label(class="form-label") }}
-            {{ form.apellidos(class="form-control") }}
-        </div>
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text" name="nombre" class="form-control"
+               value="{{ socio.nombre if socio else '' }}" required autofocus>
     </div>
 
     <div class="mb-3">
-        {{ form.documento_identidad.label(class="form-label") }}
-        {{ form.documento_identidad(class="form-control") }}
-    </div>
-
-    <div class="row">
-        <div class="col-md-7 mb-3">
-            {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control") }}
-        </div>
-        <div class="col-md-5 mb-3">
-            {{ form.telefono.label(class="form-label") }}
-            {{ form.telefono(class="form-control") }}
-        </div>
+        <label class="form-label">Apellidos</label>
+        <input type="text" name="apellidos" class="form-control"
+               value="{{ socio.apellidos if socio else '' }}">
     </div>
 
     <div class="mb-3">
-        {{ form.direccion.label(class="form-label") }}
-        {{ form.direccion(class="form-control") }}
-    </div>
-
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            {{ form.cp.label(class="form-label") }}
-            {{ form.cp(class="form-control") }}
-        </div>
-        <div class="col-md-5 mb-3">
-            {{ form.poblacion.label(class="form-label") }}
-            {{ form.poblacion(class="form-control") }}
-        </div>
-        <div class="col-md-4 mb-3">
-            {{ form.provincia.label(class="form-label") }}
-            {{ form.provincia(class="form-control") }}
-        </div>
+        <label class="form-label">DNI/NIE/CIF</label>
+        <input type="text" name="documento_identidad" class="form-control"
+               value="{{ socio.documento_identidad if socio else '' }}">
     </div>
 
     <div class="mb-3">
-        {{ form.tipo_socio_id.label(class="form-label") }}
-        {{ form.tipo_socio_id(class="form-select") }}
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control"
+               value="{{ socio.email if socio else '' }}">
     </div>
 
     <div class="mb-3">
-        {{ form.fecha_alta.label(class="form-label") }}
-        {{ form.fecha_alta(class="form-control") }}
+        <label class="form-label">Teléfono</label>
+        <input type="tel" name="telefono" class="form-control"
+               value="{{ socio.telefono if socio else '' }}">
     </div>
 
     <div class="mb-3">
-        {{ form.observaciones.label(class="form-label") }}
-        {{ form.observaciones(class="form-control") }}
+        <label class="form-label">Dirección</label>
+        <input type="text" name="direccion" class="form-control"
+               value="{{ socio.direccion if socio else '' }}">
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="{{ url_for('socios.listar_socios') }}" class="btn btn-secondary">Cancelar</a>
+    <div class="mb-3">
+        <label class="form-label">C.P.</label>
+        <input type="text" name="cp" class="form-control"
+               value="{{ socio.cp if socio else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Población</label>
+        <input type="text" name="poblacion" class="form-control"
+               value="{{ socio.poblacion if socio else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Provincia</label>
+        <input type="text" name="provincia" class="form-control"
+               value="{{ socio.provincia if socio else '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tipo de Socio</label>
+        <select name="tipo_socio_id" class="form-select" required>
+            {% for t in tipos %}
+            <option value="{{ t.id }}"
+                    {% if socio and socio.tipo_socio_id == t.id %}selected{% endif %}>
+                {{ t.nombre }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de alta</label>
+        <input type="date" name="fecha_alta" class="form-control"
+               value="{{ socio.fecha_alta if socio else '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Observaciones</label>
+        <textarea name="observaciones" class="form-control">
+               {{ socio.observaciones if socio else '' }}
+        </textarea>
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">Guardar</button>
+    </div>
+
 </form>
+
 {% endblock %}
