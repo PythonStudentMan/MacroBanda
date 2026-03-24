@@ -1,95 +1,95 @@
 {% extends 'base_tenant.html' %}
 {% block content %}
 
-<h3 class="mb-4">
-    {% if socio %}Editar Socio{% else %}Nuevo Socio{% endif %}
-</h3>
+<div class="card-shadow-sm p-4">
+    <h3 class="mb-4">{% if socio %}Editar Socio{% else %}Nuevo Socio{% endif %}</h3>
 
-<form method="POST">
+    <form method="POST">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control" required autofocus
+                       value="{{ socio.nombre if socio else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Apellidos</label>
+                <input type="text" name="apellidos" class="form-control" required
+                       value="{{ socio.apellidos if socio else '' }}">
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input type="text" name="nombre" class="form-control"
-               value="{{ socio.nombre if socio else '' }}" required autofocus>
-    </div>
+        <div class="mb-3">
+            <label class="form-label">DNI/NIE/CIF</label>
+            <input type="text" name="documento_identidad" class="form-control"
+                   value="{{ socio.documento_identidad if socio else '' }}">
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Apellidos</label>
-        <input type="text" name="apellidos" class="form-control"
-               value="{{ socio.apellidos if socio else '' }}">
-    </div>
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control"
+                       value="{{ socio.email if socio else '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Teléfono</label>
+                <input type="tel" name="telefono" class="form-control"
+                       value="{{ socio.telefono if socio else '' }}">
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">DNI/NIE/CIF</label>
-        <input type="text" name="documento_identidad" class="form-control"
-               value="{{ socio.documento_identidad if socio else '' }}">
-    </div>
+        <div class="mb-3">
+            <label class="form-label">Dirección</label>
+            <input type="text" name="direccion" class="form-control"
+                   value="{{ socio.direccion if socio else '' }}">
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control"
-               value="{{ socio.email if socio else '' }}">
-    </div>
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <label class="form-label">C.P.</label>
+                <input type="text" name="cp" class="form-control"
+                       value="{{ socio.cp if socio else '' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Población</label>
+                <input type="text" name="poblacion" class="form-control"
+                       value="{{ socio.poblacion if socio else '' }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Provincia</label>
+                <input type="text" name="provincia" class="form-control"
+                       value="{{ socio.provincia if socio else '' }}">
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Teléfono</label>
-        <input type="tel" name="telefono" class="form-control"
-               value="{{ socio.telefono if socio else '' }}">
-    </div>
+        <div class="row">
+            <div class="col md-6 mb-3">
+                <label class="form-label">Tipo de Socio</label>
+                <select name="tipo_socio_id" class="form-select" required>
+                    {% for t in tipos %}
+                    <option value="{{ t.id }}"
+                        {% if socio and socio.tipo_socio_id == t.id %}selected{% endif %}>
+                            {{ t.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de alta</label>
+                <input type="date" name="fecha_alta" class="form-control"
+                       value="{{ socio.fecha_alta if socio else '' }}" required>
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Dirección</label>
-        <input type="text" name="direccion" class="form-control"
-               value="{{ socio.direccion if socio else '' }}">
-    </div>
+        <div class="col-12 mb-3">
+            <label class="form-label">Observaciones</label>
+            <textarea name="observaciones" class="form-control">
+                   {{ socio.observaciones if socio else '' }}
+            </textarea>
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">C.P.</label>
-        <input type="text" name="cp" class="form-control"
-               value="{{ socio.cp if socio else '' }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Población</label>
-        <input type="text" name="poblacion" class="form-control"
-               value="{{ socio.poblacion if socio else '' }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Provincia</label>
-        <input type="text" name="provincia" class="form-control"
-               value="{{ socio.provincia if socio else '' }}">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Tipo de Socio</label>
-        <select name="tipo_socio_id" class="form-select" required>
-            {% for t in tipos %}
-            <option value="{{ t.id }}"
-                    {% if socio and socio.tipo_socio_id == t.id %}selected{% endif %}>
-                {{ t.nombre }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Fecha de alta</label>
-        <input type="date" name="fecha_alta" class="form-control"
-               value="{{ socio.fecha_alta if socio else '' }}" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Observaciones</label>
-        <textarea name="observaciones" class="form-control">
-               {{ socio.observaciones if socio else '' }}
-        </textarea>
-    </div>
-
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">Guardar</button>
-    </div>
-
-</form>
-
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary">{% if socio %}Actualizar{% else %}Crear{% endif %}</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

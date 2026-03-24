@@ -1,9 +1,9 @@
 from flask import Blueprint, g, render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required
 from app.extensions import db
-from app.socios.forms import SocioForm
 from app.utils.decorators import tenant_required, requiere_permiso
 from app.models import Socio, TipoSocio, Cuota
+from app.cuotas.generador import generar_cuotas_socio
 from datetime import datetime, timezone
 
 socios_bp = Blueprint('socios', __name__, url_prefix='/socios')
@@ -25,41 +25,62 @@ def listar_socios():
 @tenant_required
 @requiere_permiso('socios.editar')
 def crear_socio():
-
-    form = SocioForm()
-
     # Cargamos tipos de socio
-    tipos = TipoSocio.query.filter_by(
+    tipos_socio = TipoSocio.query.filter_by(
         agrupacion_id=g.agrupacion.id,
         activo=True
     ).all()
 
-    form.tipo_socio_id.choices = [(t.id, t.nombre) for t in tipos]
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        apellidos = request.form.get('apellidos')
+        documento_identidad = request.form.get('documento_identidad')
+        email = request.form.get('email')
+        telefono = request.form.get('telefono')
+        direccion = request.form.get('direccion')
+        cp = request.form.get('cp')
+        poblacion = request.form.get('poblacion')
+        provincia = request.form.get('provincia')
+        fecha_alta = request.form.get('fecha_alta')
+        tipo_id = request.form.get('tipo_socio_id')
+        metodo_cobro = request.form.get('metodo_cobro')
+        observaciones = request.form.get('observaciones')
 
-    if form.validate_on_submit():
+        tipo = TipoSocio.query.filter_by(
+            id=tipo_id,
+            agrupacion_id=g.agrupacion.id,
+            activo=True
+        ).first()
+        if not tipo:
+            flash('Tipo de socio no válido', 'warning')
+            return redirect(url_for('socios.crear_socio'))
+
         socio = Socio(
-            nombre=form.nombre.data,
-            apellidos=form.apellidos.data,
-            documento_identidad=form.documento_identidad.data,
-            email=form.email.data,
-            telefono=form.telefono.data,
-            direccion=form.direccion.data,
-            cp=form.cp.data,
-            poblacion=form.poblacion.data,
-            provincia=form.provincia.data,
-            tipo_socio_id=form.tipo_socio_id.data,
-            fecha_alta=form.fecha_alta.data,
-            observaciones=form.observaciones.data,
-            agrupacion_id=g.agrupacion.id
+            nombre=nombre,
+            apellidos=apellidos,
+            documento_identidad=documento_identidad,
+            email=email,
+            telefono=telefono,
+            direccion=direccion,
+            cp=cp,
+            poblacion=poblacion,
+            provincia=provincia,
+            fecha_alta=fecha_alta,
+            tipo_socio_id=tipo.id,
+            metodo_cobro=metodo_cobro,
+            agrupacion_id=g.agrupacion.id,
+            observaciones=observaciones
         )
-
         db.session.add(socio)
         db.session.commit()
 
-        flash('Socio creado correctamente', 'success')
+        # Generar cuotas iniciales
+        generar_cuotas_socio(socio, hasta_fecha=None)
+
+        flash(f'Socio {nombre} {apellidos} creado correctamente', 'success')
         return redirect(url_for('socios.listar_socios'))
 
-    return render_template('socios/socios_form.html', form=form)
+    return render_template('socios/socios_form.html', tipos_socio=tipos_socio, socio=None)
 
 @socios_bp.route('/<int:id_socio>/editar/', methods=['GET', 'POST'])
 @login_required
@@ -70,38 +91,43 @@ def editar_socio(id_socio):
         id=id_socio,
         agrupacion_id=g.agrupacion.id,
         activo=True
-    ).first_or_404()
+    ).first()
+    if not socio:
+        abort(404)
 
-    form = SocioForm(obj=socio)
-
-    tipos = TipoSocio.query.filter_by(
+    tipos_socio = TipoSocio.query.filter_by(
         agrupacion_id=g.agrupacion.id,
         activo=True
     ).all()
 
-    form.tipo_socio_id.choices = [(t.id, t.nombre) for t in tipos]
-
-    if form.validate_on_submit():
-
-        socio.nombre = form.nombre.data
-        socio.apellidos = form.apellidos.data
-        socio.documento_identidad = form.documento_identidad.data
-        socio.email = form.email.data
-        socio.telefono = form.telefono.data
-        socio.direccion = form.direccion.data
-        socio.cp = form.cp.data
-        socio.poblacion = form.poblacion.data
-        socio.provincia = form.provincia.data
-        socio.tipo_socio_id = form.tipo_socio_id.data
-        socio.fecha_alta = form.fecha_alta.data
-        socio.observaciones = form.observaciones.data
+    if request.method == 'POST':
+        socio.nombre = request.form.get('nombre')
+        socio.apellidos = request.form.get('apellidos')
+        socio.documento_identidad = request.form.get('documento_identidad')
+        socio.email = request.form.get('email')
+        socio.telefono = request.form.get('telefono')
+        socio.direccion = request.form.get('direccion')
+        socio.cp = request.form.get('cp')
+        socio.poblacion = request.form.get('poblacion')
+        socio.provincia = request.form.get('provincia')
+        tipo_id = request.form.get('tipo_socio_id')
+        tipo = TipoSocio.query.filter_by(
+            id=tipo_id,
+            agrupacion_id=g.agrupacion.id,
+            activo=True
+        ).first()
+        if tipo:
+            socio.tipo_socio_id = tipo.id
+        socio.fecha_alta = request.form.get('fecha_alta')
+        socio.observaciones = request.form.get('observaciones')
 
         db.session.commit()
 
-        flash('Socio actualizado correctamente', 'success')
+        flash(f'Socio {socio.nombre} {socio.apellido} actualizado correctamente', 'success')
         return redirect(url_for('socios.listar_socios'))
 
-    return render_template('socios/socios_form.html', form=form, socio=socio)
+    return render_template('socios/socios_form.html',
+                           socio=socio, tipos_socio=tipos_socio)
 
 @socios_bp.route('/<int:id_socio>/baja/')
 @login_required
