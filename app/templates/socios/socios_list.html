@@ -1,0 +1,37 @@
+{% extends 'base_tenant.html' %}
+
+{% block title %}Socios{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Socios</h1>
+
+<a href="{{ url_for('socios.crear_socio') }}" class="btn btn-primary mb-3">
+    <i class="bi bi-plus-lg"></i> Nuevo Socio
+</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for socio in socios %}
+        <tr>
+            <td>{{ socio.nombre }} {{ socio.apellidos }}</td>
+            <td>{{ socio.tipo_socio.nombre }}</td>
+            <td>{{ socio.email }}</td>
+            <td>{{ socio.telefono }}</td>
+            <td>
+                <a href="{{ url_for('socios.editar_socio', id=socio.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                <a href="{{ url_for('socios.baja_socio', id=socio.id) }}" class="btn btn-sm btn-outline-danger">Baja</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

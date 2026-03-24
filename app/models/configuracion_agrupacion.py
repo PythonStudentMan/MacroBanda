@@ -1,4 +1,3 @@
-from sqlalchemy.orm import foreign
 
 from app.extensions import db
 from .base import BaseModel
@@ -21,13 +20,7 @@ class ConfiguracionAgrupacion(BaseModel):
     color_fondo = db.Column(db.String(7), default="#ffffff")
     color_texto = db.Column(db.String(7), default="#000000")
 
-    forma_pago_id = db.Column(db.Integer, db.ForeignKey('formas_pago.id', name='fk_config_agrupacion_forma_pago_id'), nullable=True)
-    forma_pago = db.relationship(
-        'FormaPago',
-        foreign_keys=[forma_pago_id],
-        uselist=False,
-        back_populates='configuracion'
-    )
+
 
 
 

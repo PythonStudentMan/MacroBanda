@@ -146,6 +146,12 @@
                 </a>
                 {% endif %}
 
+                {% if tiene_permiso('socios.ver') %}
+                <a href="{{ url_for('socios.listar_socios') }}" class="list-group-item">
+                    <i class="bi bi-person-lines-fill"></i> Socios
+                </a>
+                {% endif %}
+
             {% endif %}
 
         </div>

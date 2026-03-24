@@ -27,4 +27,4 @@ class Agrupacion(BaseModel):
     membresias = db.relationship('Membresia', back_populates='agrupacion')
     roles = db.relationship('Rol', back_populates='agrupacion')
     auditorias = db.relationship('Auditoria', back_populates='agrupacion')
-    tipos_socio = db.relationship('TipoSocio', back_populates='agrupacion', lazy='dynamic', cascade='all, delete-orphan')
+

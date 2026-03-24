@@ -8,8 +8,6 @@ from app.services.auditoria import registrar_accion
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-print ('IMPORTANDO ADMIN ROUTES')
-
 @admin_bp.route('/dashboard/')
 @login_required
 def dashboard():

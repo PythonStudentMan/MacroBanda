@@ -10,5 +10,5 @@ class TenantModel(BaseModel):
     agrupacion_id = db.Column(db.Integer, db.ForeignKey('agrupaciones.id'), nullable=False)
 
     @declared_attr
-    def agrucacion(cls):
+    def agrupacion(cls):
         return db.relationship('Agrupacion')

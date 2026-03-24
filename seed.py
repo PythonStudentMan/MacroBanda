@@ -22,6 +22,15 @@ PERMISOS = [
 
     ('Ver Configuración', 'configuracion.ver'),
     ('Editar Configuración', 'configuracion.editar'),
+    ('Eliminar Configuración', 'configuracion.eliminar'),
+    ('Ver Formas de Pago', 'configuracion,formas_pago.ver'),
+    ('Editar Formas de Pago', 'configuracion,formas_pago.editar'),
+    ('Eliminar Formas de Pago', 'configuracion,formas_pago.eliminar'),
+
+    ('Ver Socios', 'socios.ver'),
+    ('Editar Socios', 'socios.editar'),
+    ('Eliminar Socios', 'socios.eliminar'),
+
 ]
 
 with app.app_context():

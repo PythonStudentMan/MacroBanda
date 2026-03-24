@@ -39,6 +39,7 @@ def create_app():
     from .roles.routes import roles_bp
     from .usuarios.routes import usuarios_bp
     from .errors.handlers import errors_bp
+    from .socios.routes import socios_bp
 
     app.register_blueprint(admin_bp)
     app.register_blueprint(panel_bp)
@@ -48,6 +49,7 @@ def create_app():
     app.register_blueprint(roles_bp)
     app.register_blueprint(usuarios_bp)
     app.register_blueprint(errors_bp)
+    app.register_blueprint(socios_bp)
 
     app.context_processor(inject_agrupacion)
     app.context_processor(inject_membresias)

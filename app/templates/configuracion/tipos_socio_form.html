@@ -1,0 +1,54 @@
+{% extends 'base_tenant.html' %}
+{% block title %}{% if tipo %}Editar{% else %}Nuevo{% endif %} Tipo de Socio{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{% if tipo %}Editar{% else %}Nuevo{% endif %} Tipo de Socio</h1>
+
+<form method="POST">
+  {{ form.hidden.tag() }}
+
+  <div class="mb-3">
+    {{ form.nombre.label(class="form-label") }}
+    {{ form.nombre(class="form-control") }}
+  </div>
+
+  <div class="form-check mb-3">
+    {{ form.tiene_cuota(class="form-check-input") }}
+    {{ form.tiene_cuota.label(class="form-check-label") }}
+  </div>
+
+  <!-- Campos de cuota solo visibles si tiene_cuota=True -->
+  <div id="cuota-fields" class="border p-3 mb-3"
+       style="display: {% if form.tiene_cuota.data %}block{% else %}none{% endif %};">
+
+    <h5>Configuración de Cuota</h5>
+
+    <div class="mb-3">
+      {{ form.importe.label(class="form-label") }}
+      {{ form.importe(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.frecuencia.label(class="form-label") }}
+      {{ form.frecuencia(class="form-select") }}
+    </div>
+
+  </div>
+
+  <button type="submit" class="btn btn-primary">Guardar</button>
+  <a href="{{ url_for('configuracion.listar_tipos_socio') }}" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+
+<!-- Script para mostrar/ocultar campos de cuota según checkbox -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const checkbox = documento.getElementById("tiene_cuota_checkbox");
+  const cuotaFields = documento.getElementById("cuota_fields");
+
+  checkbox.addEventListener("change", function() {
+    cuotaFields.style.display = this.checked ? "block" : "none";
+  });
+});
+</script>
+
+{% endblock %}
