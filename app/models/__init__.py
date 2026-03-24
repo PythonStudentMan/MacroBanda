@@ -15,3 +15,4 @@ from .tipo_socio import TipoSocio
 from .configuracion_cuota import ConfiguracionCuota
 from .metodo_cobro import MetodoCobro
 from .socio import Socio
+from .cuota import Cuota

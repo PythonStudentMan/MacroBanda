@@ -1,9 +1,9 @@
-from flask import Blueprint, g, render_template, redirect, url_for, flash
+from flask import Blueprint, g, render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required
 from app.extensions import db
 from app.socios.forms import SocioForm
 from app.utils.decorators import tenant_required, requiere_permiso
-from app.models import Socio, TipoSocio
+from app.models import Socio, TipoSocio, Cuota
 from datetime import datetime, timezone
 
 socios_bp = Blueprint('socios', __name__, url_prefix='/socios')
@@ -20,7 +20,7 @@ def listar_socios():
 
     return render_template('socios/socios_list.html', socios=socios)
 
-@socios_bp.route('/socios/nuevo', methods=['GET', 'POST'])
+@socios_bp.route('/nuevo', methods=['GET', 'POST'])
 @login_required
 @tenant_required
 @requiere_permiso('socios.editar')
@@ -61,7 +61,7 @@ def crear_socio():
 
     return render_template('socios/socios_form.html', form=form)
 
-@socios_bp.route('/socios/<int:id_socio>/editar/', methods=['GET', 'POST'])
+@socios_bp.route('/<int:id_socio>/editar/', methods=['GET', 'POST'])
 @login_required
 @tenant_required
 @requiere_permiso('socios.editar')
@@ -103,7 +103,7 @@ def editar_socio(id_socio):
 
     return render_template('socios/socios_form.html', form=form, socio=socio)
 
-@socios_bp.route('/socios/<int:id_socio>/baja/')
+@socios_bp.route('/<int:id_socio>/baja/')
 @login_required
 @tenant_required
 @requiere_permiso('socios.eliminar')
@@ -121,3 +121,38 @@ def baja_socio(id_socio):
 
     flash('Socio dado de baja', 'warning')
     return redirect(url_for('socios.lista_socios'))
+
+@socios_bp.route('/<int:id_socio>/cuotas/')
+@login_required
+@tenant_required
+@requiere_permiso('socios.ver')
+def ver_cuotas(id_socio):
+    socio = Socio.query.filter_by(
+        id=id_socio,
+        agrupacion_id=g.agrupacion.id,
+        activo=True
+    ).first()
+
+    if not socio:
+        abort(404)
+
+    # Filtros opcionales
+    estado = request.args.get('estado')
+    tipo = request.args.get('tipo')
+
+    query = Cuota.query.filter_by(
+        socio_id=socio.id,
+        agrupacion_id=g.agrupacion.id,
+        activo=True
+    )
+
+    if estado:
+        query = query.filter_by(estado=estado)
+    if tipo:
+        query = query.filter_by(tipo=tipo)
+
+    cuotas = query.order_by(Cuota.fecha.desc()).all()
+
+    return render_template('socios/cuotas.html',
+                           socio=socio, cuotas=cuotas,
+                           estado_filtrado=estado, tipo_filtrado=tipo)

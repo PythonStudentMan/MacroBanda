@@ -1,0 +1,60 @@
+{% extends 'base_tenant.html' %}
+{% block content %}
+
+<h3 class="mb-4">Cuotas de {{ socio.nombre }} {{ socio.apellidos }}</h3>
+
+<form method="GET" class="row g-3 mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Filtrar por Estado</label>
+        <select name="estado" class="form-select">
+            <option value="">Todos</option>
+            <option value="pendiente" {% if estado_filtrado='pendiente' %}selected{% endif %}>Pendiente</option>
+            <option value="pagado" {% if estado_filtrado='pagado' %}selected{% endif %}>Pagado</option>
+            <option value="cancelado" {% if estado_filtrado='cancelado' %}selected{% endif %}>Cancelado</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Filtrar por Tipo</label>
+        <select name="tipo" class="form-select">
+            <option value="">Todos</option>
+            <option value="socio" {% if estado_filtrado='socio' %}selected{% endif %}>Socio</option>
+            <option value="escuela" {% if estado_filtrado='escuela' %}selected{% endif %}>Escuela</option>
+            <option value="canon" {% if estado_filtrado='canon' %}selected{% endif %}>Canon</option>
+            <option value="evento" {% if estado_filtrado='evento' %}selected{% endif %}>Evento</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary">Filtrar</button>
+    </div>
+</form>
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="{{ url_for('socios.crear_socio') }}" class="btn btn-primary">
+        <i class="bi bi-plus me-2"></i>Volver a Socios
+    </a>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Importe</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in cuotas %}
+        <tr>
+            <td>{{ c.fecha.strftime('%d/%m/%Y') }}</td>
+            <td>{{ c.importe }} €</td>
+            <td>{{ c.tipo }}</td>
+            <td>{{ c.estado }}</td>
+            <td>{{ c.descripcion or '' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
