@@ -6,12 +6,22 @@ from app.services.permisos import tiene_permiso
 from app.utils.tenant import cargar_tenant
 from app.context_processors import inject_agrupacion, inject_membresias
 
-def create_app():
-
+def create_app(config: dict | None = None):
+    """
+    Factory de la app. Si se pasa 'config' (dict), se aplica antes de inicializar
+    las extensiones para que los tests puedan forzar settings como
+    SQLALCHEMY_DATABASE_URI o TESTING
+    """
     app = Flask(__name__, instance_relative_config=True)
+
+    # Cargar configuración por defecto desde la clase Config
     app.config.from_object(Config)
 
-    # Init extensions
+    # Si nos pasan overrides (tests), aplicarlos
+    if config:
+        app.config.update(config)
+
+    # Inicializar extensiones después de aplicar la configuración
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
